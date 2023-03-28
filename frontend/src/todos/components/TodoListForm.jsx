@@ -7,11 +7,9 @@ import { useEffect } from 'react'
 
 export const TodoListForm = ({ todoList, saveTodoList }) => {
   const [todos, setTodos] = useState(todoList.todos);
-  const [name, setName] = useState();
-  const [status, setStatus] = useState(false);
   const [activeItem, setActiveItem] = useState();
 
-  //AutoSave-functionallity ( )
+  //AutoSave-functionallity
 
 
   const handleNameChange = (index, event) => {
@@ -56,7 +54,6 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
                 sx={{ flexGrow: 1, marginTop: '1rem' }}
                 label='What to do?'
                 value={items.name}
-                onClick={() => setActiveItem(index)}
                 onChange={(e) => {
                   handleNameChange(index, e);
                 }}
@@ -64,7 +61,6 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
               <Checkbox
                 value={items.status}
                 checked={items.status}
-                onClick={() => setActiveItem(index)}
                 onChange={(e) => {
                   handleCheckChange(index, e);
                 }} />
@@ -74,6 +70,9 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
                 color='secondary'
                 onClick={() => {
                   setTodos([
+                    // immutable delete
+                    ...todos.slice(0, index),
+                    ...todos.slice(index + 1),
                   ])
                 }}
               >
