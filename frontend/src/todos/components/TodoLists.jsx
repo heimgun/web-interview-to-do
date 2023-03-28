@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@mui/material'
 import ReceiptIcon from '@mui/icons-material/Receipt'
+import DoneIcon from '@mui/icons-material/Done';
 import { TodoListForm } from './TodoListForm'
 
 
@@ -88,6 +89,11 @@ export const TodoLists = ({ style }) => {
                   <ReceiptIcon />
                 </ListItemIcon>
                 <ListItemText primary={todoLists[key].title} />
+                {todoLists[key].todos.every((todo) => todo.status) ?
+                  <ListItemButton>
+                    <DoneIcon />
+                  </ListItemButton> : ''
+                }
               </ListItemButton>
             ))}
           </List>
