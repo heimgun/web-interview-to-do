@@ -2,19 +2,13 @@ import React, { useState } from 'react'
 import { TextField, Card, CardContent, CardActions, Button, Typography, Checkbox } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
-import { useEffect } from 'react'
 
 
 export const TodoListForm = ({ todoList, saveTodoList }) => {
   const [todos, setTodos] = useState(todoList.todos);
-  const [activeItem, setActiveItem] = useState();
-
-  //AutoSave-functionallity
-
 
   const handleNameChange = (index, event) => {
     event.preventDefault();
-    console.log(todos);
     const newData = [...todos];
     newData[index].name = event.target.value;
     setTodos(newData);
@@ -22,7 +16,6 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
 
   const handleCheckChange = (index, event) => {
     event.preventDefault();
-    console.log(todos);
     const newData = [...todos];
     newData[index].status = !newData[index].status;
     setTodos(newData);
@@ -31,11 +24,6 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
   const handleSubmit = () => {
     saveTodoList(todoList.id, { todos });
   }
-
-  useEffect(() => {
-    console.log(todoList);
-    console.log(todos);
-  }, [todos])
 
   return (
     <Card sx={{ margin: '0 1rem' }}>

@@ -46,33 +46,24 @@ export const TodoLists = ({ style }) => {
   useEffect(() => {
     //kolla så localstorage finns
     var getList = localStorage.getItem("todoLists");
-    console.log(getList, 'init');
     if (getList) {
       getList = JSON.parse(getList);
       if (getList['0000000001']?.todos.length > 1 || getList['0000000001']?.todos.length > 1) {
-        console.log('added get list');
         setTodoLists(getList);
       }
     }
     else {
       fetchTodoLists().then(setTodoLists);
-      console.log('added origin list');
     }
   }, []);
 
   useEffect(() => {
     updateStorage(todoLists);
-    console.log(localStorage.getItem("todoLists"));
   }, [todoLists])
-
-  useEffect(() => {
-    console.log(activeList);
-  }, [activeList])
 
   const updateStorage = (items) => {
     if (Object.keys(items).length) {
       localStorage.setItem("todoLists", JSON.stringify(items));
-      console.log('changed storage');
     }
   }
 
