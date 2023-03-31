@@ -5,6 +5,9 @@
     "@mui/icons-material": "^5.6.2",
     "@mui/material": "^5.7.0",
     "@mui/styles": "^5.7.0",
+    "@reduxjs/toolkit": "^1.9.3",
+    "install": "^0.13.0",
+    "npm": "^9.6.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "^5.0.1"

@@ -9,9 +9,11 @@ import {
   Typography,
 } from '@mui/material'
 import ReceiptIcon from '@mui/icons-material/Receipt'
+import DoneIcon from '@mui/icons-material/Done';
 import { TodoListForm } from './TodoListForm'
 
-// Simulate network
+
+// // Simulate network
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const fetchTodoLists = () => {
@@ -20,12 +22,18 @@ const fetchTodoLists = () => {
       '0000000001': {
         id: '0000000001',
         title: 'First List',
-        todos: ['First todo of first list!'],
+        todos: [{
+          name: 'First todo of first list!',
+          status: false
+        }],
       },
       '0000000002': {
         id: '0000000002',
         title: 'Second List',
-        todos: ['First todo of second list!'],
+        todos: [{
+          name: 'First todo of first list!',
+          status: false
+        }],
       },
     })
   )
@@ -36,8 +44,28 @@ export const TodoLists = ({ style }) => {
   const [activeList, setActiveList] = useState()
 
   useEffect(() => {
-    fetchTodoLists().then(setTodoLists)
-  }, [])
+    //kolla så localstorage finns
+    var getList = localStorage.getItem("todoLists");
+    if (getList) {
+      getList = JSON.parse(getList);
+      if (getList['0000000001']?.todos.length > 1 || getList['0000000001']?.todos.length > 1) {
+        setTodoLists(getList);
+      }
+    }
+    else {
+      fetchTodoLists().then(setTodoLists);
+    }
+  }, []);
+
+  useEffect(() => {
+    updateStorage(todoLists);
+  }, [todoLists])
+
+  const updateStorage = (items) => {
+    if (Object.keys(items).length) {
+      localStorage.setItem("todoLists", JSON.stringify(items));
+    }
+  }
 
   if (!Object.keys(todoLists).length) return null
   return (
@@ -52,6 +80,11 @@ export const TodoLists = ({ style }) => {
                   <ReceiptIcon />
                 </ListItemIcon>
                 <ListItemText primary={todoLists[key].title} />
+                {todoLists[key].todos.every((todo) => todo.status) ?
+                  <ListItemButton>
+                    <DoneIcon />
+                  </ListItemButton> : ''
+                }
               </ListItemButton>
             ))}
           </List>
