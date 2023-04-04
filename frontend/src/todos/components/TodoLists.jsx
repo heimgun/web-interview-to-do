@@ -21,7 +21,6 @@ export const TodoLists = ({ style }) => {
   useEffect(async () => {
     await APIService.getLists()
       .then((res) => {
-        console.log(res);
         setTodoLists(res.data);
       })
       .catch((error) => {
