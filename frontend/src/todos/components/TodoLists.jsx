@@ -11,60 +11,44 @@ import {
 import ReceiptIcon from '@mui/icons-material/Receipt'
 import DoneIcon from '@mui/icons-material/Done';
 import { TodoListForm } from './TodoListForm'
+import APIService from '../../APIService';
 
-
-// // Simulate network
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-
-const fetchTodoLists = () => {
-  return sleep(1000).then(() =>
-    Promise.resolve({
-      '0000000001': {
-        id: '0000000001',
-        title: 'First List',
-        todos: [{
-          name: 'First todo of first list!',
-          status: false
-        }],
-      },
-      '0000000002': {
-        id: '0000000002',
-        title: 'Second List',
-        todos: [{
-          name: 'First todo of first list!',
-          status: false
-        }],
-      },
-    })
-  )
-}
 
 export const TodoLists = ({ style }) => {
   const [todoLists, setTodoLists] = useState({})
   const [activeList, setActiveList] = useState()
 
-  useEffect(() => {
-    //kolla så localstorage finns
-    var getList = localStorage.getItem("todoLists");
-    if (getList) {
-      getList = JSON.parse(getList);
-      if (getList['0000000001']?.todos.length > 1 || getList['0000000001']?.todos.length > 1) {
-        setTodoLists(getList);
-      }
-    }
-    else {
-      fetchTodoLists().then(setTodoLists);
-    }
+  useEffect(async () => {
+    await APIService.getLists()
+      .then((res) => {
+        console.log(res);
+        setTodoLists(res.data);
+      })
+      .catch((error) => {
+        if (error.response.status === 404) {
+          console.log("404 Not found");
+        }
+        if (error.response.status === 500) {
+          console.log("500 Server error");
+        }
+      })
   }, []);
 
-  useEffect(() => {
-    updateStorage(todoLists);
-  }, [todoLists])
 
-  const updateStorage = (items) => {
-    if (Object.keys(items).length) {
-      localStorage.setItem("todoLists", JSON.stringify(items));
-    }
+  const updateAPI = async (id, todos) => {
+    await APIService.updateLists(id, todos)
+      .then((res) => {
+        console.log(res);
+        setTodoLists(res.data);
+      })
+      .catch((error) => {
+        if (error.response.status === 404) {
+          console.log("404 Not found");
+        }
+        if (error.response.status === 500) {
+          console.log("500 Server error");
+        }
+      })
   }
 
   if (!Object.keys(todoLists).length) return null
@@ -95,11 +79,7 @@ export const TodoLists = ({ style }) => {
           key={activeList} // use key to make React recreate component to reset internal state
           todoList={todoLists[activeList]}
           saveTodoList={(id, { todos }) => {
-            const listToUpdate = todoLists[id]
-            setTodoLists({
-              ...todoLists,
-              [id]: { ...listToUpdate, todos },
-            })
+            updateAPI(id, todos);
           }}
         />
       )}
